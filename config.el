@@ -4,6 +4,16 @@
 
 (setq display-line-numbers-type `relative)
 
+(setq which-key-idle-delay 0.5)
+
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist
+   '(("" . "\\`+?evil[-:]?\\(?:a-\\)?\\(.*\\)") . (nil . "◂\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
+   ))
+
 (setq org-directory "~/notes/org-mode/")
 (setq org-roam-directory "~/notes/org-mode/")
 
@@ -26,6 +36,8 @@
 (setq org-hide-emphasis-markers t)
 (setq org-startup-folded 'content)
 (setq org-ellipsis " ") ;; folding symbol
+
+(setq-default major-mode 'org-mode)
 
 (setq org-appear-autolinks t)
 (setq org-appear-autoentities t)
