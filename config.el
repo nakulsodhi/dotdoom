@@ -14,28 +14,37 @@
    '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "◃\\1"))
    ))
 
-(setq org-directory "~/notes/org-mode/")
-(setq org-roam-directory "~/notes/org-mode/")
-
 (add-hook 'org-mode-hook 'turn-on-org-cdlatex)
 (add-hook 'LaTeX-mode-hook 'turn-on-cdlatex)
+(add-hook 'org-mode-hook 'org-latex-preview)
 
- (defun enable-word-processor-minor-modes ()
-    (setq line-spacing 0.15)
-    ;;(pixel-scroll-precision-mode)
-    (smartparens-mode)
-    (visual-line-mode))
-  ;;  (add-hook 'window-size-change-functions 'org-image-resize)
-  (add-hook 'text-mode-hook 'enable-word-processor-minor-modes)
-  ;;(add-hook 'org-mode-hook 'org-appear-mode)
-  (add-hook 'org-mode-hook 'org-roam-db-autosync-enable)
-  (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+(defun enable-word-processor-minor-modes ()
+  (setq line-spacing 0.15)
+  ;;(pixel-scroll-precision-mode)
+  (smartparens-mode)
+  (visual-line-mode))
+;;  (add-hook 'window-size-change-functions 'org-image-resize)
+(add-hook 'text-mode-hook 'enable-word-processor-minor-modes)
+;;(add-hook 'org-mode-hook 'org-appear-mode)
+(add-hook 'org-mode-hook 'org-roam-db-autosync-enable)
+(add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+(after! org
+  (setq org-directory "~/notes/org-mode/")
+  (setq org-roam-directory "~/notes/org-mode/")
   (setq org-habit-show-habits-only-for-today nil)
-  (setq org-agenda-files (directory-files-recursively "~/OneDrive/org-mode/" "\\.org$"))
-(setq org-pretty-entities t)
-(setq org-hide-emphasis-markers t)
-(setq org-startup-folded 'content)
-(setq org-ellipsis " ") ;; folding symbol
+  (setq org-agenda-files (directory-files-recursively "~/notes/org-mode/" "\\.org$"))
+  (setq org-pretty-entities t)
+  (setq org-hide-emphasis-markers t)
+  (setq org-startup-folded `content)
+  (setq org-ellipsis " ") ;; folding symbol
+  )
+
+(setq doom-font (font-spec :family "Iosevka Nerd Font Mono")
+      doom-variable-pitch-font (font-spec :family "Vollkorn"))
+
+(setq +zen-text-scale 1)
+(setq writeroom-width 0.8)
+(add-hook 'org-mode-hook 'writeroom-mode)
 
 (setq-default major-mode 'org-mode)
 
@@ -56,3 +65,21 @@
 ;;                                     #'org-appear-manual-stop
 ;;                                     nil
 ;;                                     t)))
+
+(setq projectile-cache-file (concat doom-cache-dir "projectile.cache")
+        projectile-enable-caching (not noninteractive)
+        projectile-indexing-method (if IS-WINDOWS 'native 'alien)
+        projectile-known-projects-file (concat doom-cache-dir "projectile.projects")
+        projectile-require-project-root nil
+        projectile-globally-ignored-files '(".DS_Store" "Icon
+" "TAGS")
+        projectile-globally-ignored-file-suffixes '(".elc" ".pyc" ".o")
+        projectile-ignored-projects '("~/" "/tmp"))
+
+(set-frame-parameter nil 'alpha-background 80)
+
+(after! ccls
+  (setq ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
+  (set-lsp-priority! 'ccls 2)) ; optional as ccls is the default in Doom
+
+(setq lsp-lens-enable nil)
