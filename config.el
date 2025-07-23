@@ -4,6 +4,10 @@
 
 (setq display-line-numbers-type `relative)
 
+(setq require-final-newline nil)
+
+(setq shell-file-name (executable-find "bash"))
+
 (setq which-key-idle-delay 0.5)
 
 (setq which-key-allow-multiple-replacements t)
@@ -36,7 +40,7 @@
   (setq org-pretty-entities t)
   (setq org-hide-emphasis-markers t)
   (setq org-startup-folded `content)
-  (setq org-ellipsis " ") ;; folding symbol
+  (setq org-ellipsis "  ") ;; folding symbol
   )
 
 (setq doom-font (font-spec :family "Iosevka Nerd Font Mono")
@@ -78,8 +82,15 @@
 
 (set-frame-parameter nil 'alpha-background 80)
 
-(after! ccls
-  (setq ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
-  (set-lsp-priority! 'ccls 2)) ; optional as ccls is the default in Doom
+(set-eglot-client! 'cc-mode '("clangd" "-j=3" "--clang-tidy" "--compile-commands-dir=cmake-build-debug"))
 
 (setq lsp-lens-enable nil)
+
+(after! cc-mode
+  (add-hook! 'c++-mode-hook
+             (defun +cc-comment-style-to-block ()
+               "use block comments instead of line comments"
+               (c-toggle-comment-style 1))))
+
+(after! cc-mode
+  (setq c-max-one-liner-length 150))

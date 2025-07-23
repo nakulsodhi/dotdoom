@@ -21,6 +21,14 @@ numbers are disabled. For relative line numbers, set this to `relative'.
 #+begin_src emacs-lisp
 (setq display-line-numbers-type `relative)
 #+end_src
+
+#+begin_src emacs-lisp
+(setq require-final-newline nil)
+#+end_src
+
+#+begin_src emacs-lisp
+(setq shell-file-name (executable-find "bash"))
+#+end_src
 * Which Key
 Set the whick key opening delay to  0.5 seconds
 #+begin_src emacs-lisp
@@ -64,7 +72,7 @@ Set the directory
   (setq org-pretty-entities t)
   (setq org-hide-emphasis-markers t)
   (setq org-startup-folded `content)
-  (setq org-ellipsis " ") ;; folding symbol
+  (setq org-ellipsis "  ") ;; folding symbol
   )
 
 #+end_src
@@ -116,6 +124,8 @@ smartparens equivalency (default +smartparens under doom config is NOT all you n
 ;;                                     nil
 ;;                                     t)))
 #+end_src
+** Be able to search folded headings in org mode
+**  Org roam
 * Projectile
 #+begin_src emacs-lisp
   (setq projectile-cache-file (concat doom-cache-dir "projectile.cache")
@@ -137,11 +147,22 @@ Setting 80% transparency
 * LSP
 Set up ccls
 #+begin_src emacs-lisp
-(after! ccls
-  (setq ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
-  (set-lsp-priority! 'ccls 2)) ; optional as ccls is the default in Doom
+(set-eglot-client! 'cc-mode '("clangd" "-j=3" "--clang-tidy" "--compile-commands-dir=cmake-build-debug"))
 #+end_src
 lens update is very slow
 #+begin_src emacs-lisp
   (setq lsp-lens-enable nil)
+#+end_src
+
+#+begin_src emacs-lisp
+(after! cc-mode
+  (add-hook! 'c++-mode-hook
+             (defun +cc-comment-style-to-block ()
+               "use block comments instead of line comments"
+               (c-toggle-comment-style 1))))
+#+end_src
+
+#+begin_src emacs-lisp
+(after! cc-mode
+  (setq c-max-one-liner-length 150))
 #+end_src
